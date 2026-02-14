@@ -132,14 +132,14 @@ const Combo = () => {
                 ) : (
                     <>
                         {products.length > 0 ? (
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
                                 {products.map((product, i) => (
                                     <motion.div
                                         key={product.id}
                                         initial={{ opacity: 0, scale: 0.95 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         transition={{ delay: i * 0.1 }}
-                                        className="group bg-card rounded-[2rem] overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 shadow-sm hover:shadow-xl"
+                                        className="group bg-card rounded-2xl md:rounded-[2rem] overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-500 shadow-sm hover:shadow-xl"
                                     >
                                         <Link to={`/product/${product.id}`} className="block relative aspect-[4/5] overflow-hidden">
                                             <CloudinaryImage
@@ -147,36 +147,36 @@ const Combo = () => {
                                                 alt={product.name}
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                             />
-                                            <div className="absolute top-4 left-4 flex flex-col gap-2">
+                                            <div className="absolute top-2 left-2 md:top-4 md:left-4 flex flex-col gap-1 md:gap-2">
                                                 {!isInStock(product) && (
-                                                    <span className="bg-foreground text-primary-foreground text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider shadow-lg">
+                                                    <span className="bg-foreground text-primary-foreground text-[8px] md:text-[10px] px-2 py-0.5 md:px-3 md:py-1 rounded-full font-bold uppercase tracking-wider shadow-lg">
                                                         Sold Out
                                                     </span>
                                                 )}
                                                 {product.original_price && product.original_price > product.price && (
-                                                    <span className="bg-primary text-primary-foreground text-[10px] px-3 py-1 rounded-full font-bold uppercase tracking-wider shadow-lg">
+                                                    <span className="bg-primary text-primary-foreground text-[8px] md:text-[10px] px-2 py-0.5 md:px-3 md:py-1 rounded-full font-bold uppercase tracking-wider shadow-lg">
                                                         Best Value
                                                     </span>
                                                 )}
                                             </div>
                                         </Link>
-                                        <div className="p-5 lg:p-6">
+                                        <div className="p-3.5 md:p-5 lg:p-6">
                                             <Link to={`/product/${product.id}`}>
-                                                <h3 className="font-heading text-base lg:text-lg font-bold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-1">
+                                                <h3 className="font-heading text-sm md:text-base lg:text-lg font-bold text-foreground mb-1 md:mb-2 group-hover:text-primary transition-colors line-clamp-1">
                                                     {product.name}
                                                 </h3>
                                             </Link>
 
-                                            <div className="flex items-center justify-between mb-4">
-                                                <div className="flex flex-col">
-                                                    <span className="text-primary font-bold text-lg">₹{product.price.toLocaleString("en-IN")}</span>
+                                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 md:mb-4 gap-1 sm:gap-0">
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className="text-primary font-bold text-base md:text-lg">₹{product.price.toLocaleString("en-IN")}</span>
                                                     {product.original_price && product.original_price > product.price && (
-                                                        <span className="text-xs text-muted-foreground line-through opacity-60 italic">₹{product.original_price.toLocaleString("en-IN")}</span>
+                                                        <span className="text-[10px] md:text-xs text-muted-foreground line-through opacity-60 italic">₹{product.original_price.toLocaleString("en-IN")}</span>
                                                     )}
                                                 </div>
-                                                <div className="flex items-center gap-1 bg-amber-50 px-2 py-1 rounded-lg">
-                                                    <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                                                    <span className="text-xs font-bold text-amber-700">
+                                                <div className="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 md:px-2 md:py-1 rounded-lg w-fit">
+                                                    <Star className="w-2.5 h-2.5 md:w-3 h-3 fill-amber-400 text-amber-400" />
+                                                    <span className="text-[10px] md:text-xs font-bold text-amber-700">
                                                         {product.avg_rating ? Number(product.avg_rating).toFixed(1) : "5.0"}
                                                     </span>
                                                 </div>
@@ -200,10 +200,11 @@ const Combo = () => {
                                                     toast.success(`${product.name} added to cart`);
                                                 }}
                                                 disabled={!isInStock(product)}
-                                                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl border border-border text-foreground text-sm font-semibold hover:gradient-gold hover:text-primary-foreground hover:border-transparent transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed group/btn"
+                                                className="w-full flex items-center justify-center gap-1.5 md:gap-2 py-2.5 md:py-3 rounded-xl md:rounded-2xl border border-border text-foreground text-[10px] sm:text-sm font-semibold hover:gradient-gold hover:text-primary-foreground hover:border-transparent transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed group/btn"
                                             >
-                                                <ShoppingBag className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                                                {isInStock(product) ? "Add Bundle to Cart" : "Currently Unavailable"}
+                                                <ShoppingBag className="w-3.5 h-3.5 md:w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                                                <span className="hidden sm:inline">{isInStock(product) ? "Add Bundle to Cart" : "Currently Unavailable"}</span>
+                                                <span className="sm:hidden">{isInStock(product) ? "Add to Cart" : "Unavailable"}</span>
                                             </button>
                                         </div>
                                     </motion.div>
