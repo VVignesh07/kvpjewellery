@@ -18,7 +18,7 @@ const HeroSection = () => {
   const DEFAULT_SLIDES: HeroSlide[] = [
     {
       id: "default-1",
-      image_url: "https://images.unsplash.com/photo-1596450514735-3004bbbb5512?q=80&w=1974&auto=format&fit=crop",
+      image_url: "https://images.unsplash.com/photo-1596450514735-3004bbbb5512?q=80&w=1920&auto=format&fit=crop",
       title: "The Bridal Edit",
       subtitle: "Experience the grandeur of 22k gold bridal sets designed for your special day.",
       button_text: "EXPLORE BRIDAL",
@@ -26,7 +26,7 @@ const HeroSection = () => {
     },
     {
       id: "default-2",
-      image_url: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=2080&auto=format&fit=crop",
+      image_url: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?q=80&w=1920&auto=format&fit=crop",
       title: "Diamond Elegance",
       subtitle: "Modern solitaires and diamond necklaces that define sophistication.",
       button_text: "SHOP DIAMONDS",
@@ -135,12 +135,15 @@ const HeroSection = () => {
           className="absolute inset-0 w-full h-full"
         >
           {/* Background image */}
-          <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-neutral-900">
             <img
               src={currentSlide.image_url}
               alt={currentSlide.title || "Luxury gold jewellery"}
-              className="w-full h-full object-cover object-[center_20%] lg:object-center"
+              className="w-full h-full object-cover object-[center_20%] lg:object-center transition-opacity duration-500"
               loading="eager"
+              // @ts-ignore
+              fetchpriority={currentIndex === 0 ? "high" : "auto"}
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-foreground/90 via-foreground/60 to-foreground/20 lg:to-transparent" />
           </div>

@@ -118,13 +118,14 @@ const Navbar = () => {
               </span>
             )}
           </Link>
-          <button
-            className="lg:hidden p-2.5 text-foreground hover:bg-muted rounded-full transition-colors"
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            className="lg:hidden p-2.5 text-foreground hover:bg-muted rounded-full transition-colors relative z-[60]"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          </motion.button>
         </div>
       </nav>
 

@@ -17,9 +17,9 @@ const CollectionsSection = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "start",
+    align: "center",
     containScroll: "trimSnaps",
-    dragFree: false, // Changed to false for better snapping
+    dragFree: true,
     loop: false
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
