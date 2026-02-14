@@ -49,8 +49,13 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { generateCustomerWhatsAppUrl, generateOrderConfirmationUrl } from "@/lib/whatsapp";
-import { MessageCircle as MsgCircle } from "lucide-react";
+import {
+    generateCustomerWhatsAppUrl,
+    generateOrderConfirmationUrl,
+    generateShippingUpdateUrl,
+    generatePaymentReminderUrl
+} from "@/lib/whatsapp";
+import { MessageCircle as MsgCircle, Bell, Send } from "lucide-react";
 
 interface OrderItem {
     id: string;
@@ -420,13 +425,14 @@ const AdminOrders = () => {
                                                             variant="outline"
                                                             size="icon"
                                                             className="flex-1 sm:h-12 sm:w-12 h-12 rounded-xl border-2 border-emerald-100 text-emerald-600 hover:bg-emerald-50 hover:border-emerald-200 transition-all"
-                                                            title="Confirm & Notify Customer"
-                                                            onClick={() => {
-                                                                const url = generateOrderConfirmationUrl(
+                                                            title="WhatsApp Actions"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                const msg = generateOrderConfirmationUrl(
                                                                     order.order_number,
-                                                                    order.shipping_address?.name || "Customer",
-                                                                    order.shipping_address?.phone || ""
+                                                                    order.shipping_address?.name || "Customer"
                                                                 );
+                                                                const url = `${generateCustomerWhatsAppUrl(order.shipping_address?.phone || "")}?text=${encodeURIComponent(msg)}`;
                                                                 window.open(url, "_blank");
                                                             }}
                                                         >
@@ -516,19 +522,54 @@ const AdminOrders = () => {
 
                                     <div className="space-y-4">
                                         <h3 className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
-                                            <CreditCard className="h-3 w-3 text-amber-500" /> Payment & Status
+                                            <Bell className="h-3 w-3 text-amber-500" /> WhatsApp Notifications
                                         </h3>
-                                        <div className="bg-gray-50 rounded-2xl p-6 space-y-3 border border-gray-100">
-                                            <div className="flex justify-between items-center">
-                                                <span className="text-gray-400 font-bold text-xs uppercase tracking-wider">Status:</span>
-                                                <Badge className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border-2 ${statusThemes[selectedOrder.status as keyof typeof statusThemes]}`}>
-                                                    {selectedOrder.status.replace("_", " ")}
-                                                </Badge>
-                                            </div>
-                                            <div className="flex justify-between items-center">
-                                                <span className="text-gray-400 font-bold text-xs uppercase tracking-wider">Method:</span>
-                                                <span className="text-gray-700 font-black">{selectedOrder.payment_method?.toUpperCase()}</span>
-                                            </div>
+                                        <div className="bg-emerald-50/50 rounded-2xl p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-3 border border-emerald-100 shadow-sm">
+                                            <Button
+                                                variant="outline"
+                                                className="h-12 rounded-xl bg-white border-emerald-200 text-emerald-700 hover:bg-emerald-100 font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2"
+                                                onClick={() => {
+                                                    const msg = generateOrderConfirmationUrl(selectedOrder.order_number, selectedOrder.shipping_address?.name);
+                                                    const url = `${generateCustomerWhatsAppUrl(selectedOrder.shipping_address?.phone)}?text=${encodeURIComponent(msg)}`;
+                                                    window.open(url, "_blank");
+                                                }}
+                                            >
+                                                <CheckCircle2 className="w-4 h-4" />
+                                                Order Confirmed
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                className="h-12 rounded-xl bg-white border-blue-200 text-blue-700 hover:bg-blue-100 font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2"
+                                                onClick={() => {
+                                                    const msg = generateShippingUpdateUrl(
+                                                        selectedOrder.order_number,
+                                                        selectedOrder.shipping_address?.name,
+                                                        selectedOrder.tracking_number || "PENDING",
+                                                        selectedOrder.tracking_url
+                                                    );
+                                                    const url = `${generateCustomerWhatsAppUrl(selectedOrder.shipping_address?.phone)}?text=${encodeURIComponent(msg)}`;
+                                                    window.open(url, "_blank");
+                                                }}
+                                            >
+                                                <Truck className="w-4 h-4" />
+                                                Notify Shipping
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                className="h-12 rounded-xl bg-white border-amber-200 text-amber-700 hover:bg-amber-100 font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-2 sm:col-span-2"
+                                                onClick={() => {
+                                                    const msg = generatePaymentReminderUrl(
+                                                        selectedOrder.order_number,
+                                                        selectedOrder.shipping_address?.name,
+                                                        selectedOrder.total_amount
+                                                    );
+                                                    const url = `${generateCustomerWhatsAppUrl(selectedOrder.shipping_address?.phone)}?text=${encodeURIComponent(msg)}`;
+                                                    window.open(url, "_blank");
+                                                }}
+                                            >
+                                                <CreditCard className="w-4 h-4" />
+                                                Payment Reminder
+                                            </Button>
                                         </div>
                                     </div>
 
@@ -630,7 +671,7 @@ const AdminOrders = () => {
                     </div>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+        </div >
     );
 };
 

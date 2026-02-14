@@ -60,14 +60,14 @@ const WhatsAppChatbot = () => {
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 font-sans flex flex-col items-end">
+        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 font-sans flex flex-col items-end max-w-[calc(100vw-2rem)]">
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.8, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                        className="mb-4 w-[350px] sm:w-[380px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[550px]"
+                        className="mb-4 w-[calc(100vw-2rem)] sm:w-[380px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[70vh] sm:max-h-[550px]"
                     >
                         {/* Header */}
                         <div className="bg-[#075E54] p-4 text-white flex items-center justify-between shadow-lg">

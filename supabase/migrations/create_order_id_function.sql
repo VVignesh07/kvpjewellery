@@ -1,20 +1,23 @@
--- Function to generate the next order number safely
--- This functions runs with SECURITY DEFINER to bypass RLS for the count
+-- Function to generate the next order number safely using a sequence
+-- Create sequence if it doesn't exist
+CREATE SEQUENCE IF NOT EXISTS order_number_seq START 1;
+
 CREATE OR REPLACE FUNCTION get_next_order_number()
 RETURNS TEXT
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 DECLARE
-  next_num INTEGER;
+  next_val INTEGER;
 BEGIN
-  -- Get count of all orders (bypassing RLS)
-  SELECT count(*) + 1 INTO next_num FROM orders;
+  -- Get the next value from the sequence
+  next_val := nextval('order_number_seq');
   
-  -- Return formatted order number (e.g., KVP-005)
-  RETURN 'KVP-' || lpad(next_num::TEXT, 3, '0');
+  -- Return formatted order number (e.g., KVP-001)
+  RETURN 'KVP-' || lpad(next_val::TEXT, 3, '0');
 END;
 $$;
 
--- Grant execute permission to authenticated users
+-- Grant execute permission
 GRANT EXECUTE ON FUNCTION get_next_order_number() TO authenticated;
+GRANT EXECUTE ON FUNCTION get_next_order_number() TO anon;
