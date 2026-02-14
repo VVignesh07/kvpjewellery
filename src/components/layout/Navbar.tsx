@@ -129,92 +129,45 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileOpen(false)}
-              className="fixed inset-0 z-50 bg-background/60 backdrop-blur-sm lg:hidden"
-            />
-
-            {/* Side Drawer */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 z-[55] h-full w-[85%] max-w-sm bg-background shadow-2xl lg:hidden flex flex-col p-6"
-            >
-              <div className="flex items-center justify-between mb-8">
-                <span className="font-heading font-black text-2xl text-primary tracking-tighter">KVP</span>
-                <button
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="lg:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-md"
+          >
+            <div className="container mx-auto px-4 py-8 flex flex-col gap-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
                   onClick={() => setMobileOpen(false)}
-                  className="p-2 hover:bg-muted rounded-full transition-colors"
+                  className="text-lg font-semibold py-4 px-5 rounded-2xl text-foreground hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-between group active:scale-[0.98]"
                 >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                {navLinks.map((link, idx) => (
-                  <motion.div
-                    key={link.label}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 + idx * 0.05 }}
+                  {link.label}
+                  <span className="text-primary/30 group-hover:translate-x-1 transition-transform">→</span>
+                </Link>
+              ))}
+              {user && (
+                <>
+                  <div className="border-t border-border my-6 mx-5" />
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileOpen(false);
+                    }}
+                    className="text-lg font-semibold py-4 px-5 rounded-2xl text-destructive hover:bg-destructive/10 transition-all text-left flex items-center gap-4 active:scale-[0.98]"
                   >
-                    <Link
-                      to={link.to}
-                      onClick={() => setMobileOpen(false)}
-                      className="text-xl font-semibold py-4 px-5 rounded-2xl text-foreground hover:bg-primary/5 hover:text-primary transition-all flex items-center justify-between group"
-                    >
-                      {link.label}
-                      <span className="text-primary/30 group-hover:translate-x-1 transition-transform">→</span>
-                    </Link>
-                  </motion.div>
-                ))}
-
-                {user && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 + navLinks.length * 0.05 }}
-                  >
-                    <div className="border-t border-border my-6" />
-                    <Link
-                      to="/profile"
-                      onClick={() => setMobileOpen(false)}
-                      className="text-lg font-medium py-4 px-5 rounded-2xl text-muted-foreground hover:bg-primary/5 hover:text-primary transition-all flex items-center gap-4"
-                    >
-                      <User className="h-5 w-5" />
-                      My Account
-                    </Link>
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                        setMobileOpen(false);
-                      }}
-                      className="w-full text-lg font-medium py-4 px-5 rounded-2xl text-destructive hover:bg-destructive/5 transition-all text-left flex items-center gap-4"
-                    >
-                      <LogOut className="h-5 w-5" />
-                      Logout
-                    </button>
-                  </motion.div>
-                )}
-              </div>
-
-              <div className="mt-auto pt-10 pb-6 text-center">
-                <p className="text-xs text-muted-foreground font-body tracking-widest uppercase">
-                  Premium Jewellery
-                </p>
-              </div>
-            </motion.div>
-          </>
+                    <LogOut className="h-5 w-5" />
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </header>
