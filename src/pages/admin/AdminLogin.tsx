@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,14 +14,18 @@ const AdminLogin = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     const { signIn, signOut, user, userRole } = useAdminAuth();
+
+    // Destination after successful login
+    const from = (location.state as any)?.from?.pathname || "/admin";
 
     // Auto-redirect if already logged in as admin
     useEffect(() => {
         if (user && userRole === 'admin') {
-            navigate("/admin");
+            navigate(from, { replace: true });
         }
-    }, [user, userRole, navigate]);
+    }, [user, userRole, navigate, from]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -65,7 +69,7 @@ const AdminLogin = () => {
                     toast.success("Welcome back, Admin!");
                     setLoading(false);
                     clearTimeout(timeoutId);
-                    navigate("/admin");
+                    navigate(from, { replace: true });
                 } else {
                     toast.error("Access denied. Admin privileges required.");
                     await signOut();

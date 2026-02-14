@@ -44,7 +44,7 @@ const AdminLayout = () => {
         if (!loading) {
             if (!user || userRole !== 'admin') {
                 toast.error("Unauthorized access. Admin privileges required.");
-                navigate("/admin/login");
+                navigate("/admin/login", { state: { from: location }, replace: true });
             } else {
                 setIsAuthorized(true);
             }
