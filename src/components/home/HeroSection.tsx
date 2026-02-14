@@ -102,36 +102,42 @@ const HeroSection = () => {
   }
 
   const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
-    }),
+    enter: {
+      opacity: 0,
+      filter: "blur(20px)",
+      scale: 1.1,
+    },
     center: {
       zIndex: 1,
-      x: 0,
-      opacity: 1
+      opacity: 1,
+      filter: "blur(0px)",
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1] as any,
+      }
     },
-    exit: (direction: number) => ({
+    exit: {
       zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
-    })
-  };
+      opacity: 0,
+      filter: "blur(10px)",
+      scale: 1.05,
+      transition: {
+        duration: 0.6,
+        ease: "easeInOut"
+      }
+    }
+  } as any;
 
   return (
-    <section className="relative min-h-[80dvh] lg:min-h-[85vh] flex items-center overflow-hidden bg-foreground">
-      <AnimatePresence initial={false} custom={direction}>
+    <section className="relative min-h-[80dvh] lg:min-h-[85vh] flex items-center overflow-hidden bg-foreground" >
+      <AnimatePresence initial={false}>
         <motion.div
           key={currentIndex}
-          custom={direction}
           variants={variants}
           initial="enter"
           animate="center"
           exit="exit"
-          transition={{
-            x: { type: "spring", stiffness: 300, damping: 30 },
-            opacity: { duration: 0.6 }
-          }}
           className="absolute inset-0 w-full h-full"
         >
           {/* Background image */}
@@ -230,8 +236,9 @@ const HeroSection = () => {
             ))}
           </div>
         </>
-      )}
-    </section>
+      )
+      }
+    </section >
   );
 };
 
