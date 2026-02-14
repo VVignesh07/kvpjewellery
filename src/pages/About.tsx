@@ -68,13 +68,15 @@ const About = () => {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.6 }}
-                                className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl"
+                                className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl bg-muted"
                             >
                                 <img
-                                    src="https://images.unsplash.com/photo-1598560917684-2195f17d3d62?auto=format&fit=crop&q=80"
+                                    src="https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&q=80&w=800"
                                     alt="Jewellery Craftmanship"
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                                    loading="lazy"
                                 />
+                                <div className="absolute inset-0 bg-primary/5 mix-blend-multiply" />
                             </motion.div>
                         </div>
                     </div>

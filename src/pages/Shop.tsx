@@ -246,7 +246,7 @@ const Shop = () => {
                   transition={{ delay: i * 0.05 }}
                   className="group bg-card rounded-2xl overflow-hidden shadow-soft hover:shadow-elevated transition-all duration-500"
                 >
-                  <Link to={`/product/${product.id}`} className="block relative aspect-square overflow-hidden">
+                  <Link to={`/product/${product.id}`} className="block relative aspect-[4/5] sm:aspect-square overflow-hidden">
                     <CloudinaryImage
                       src={product.image_url || '/placeholder.svg'}
                       alt={product.name}
@@ -254,17 +254,17 @@ const Shop = () => {
                     />
                     <div className="absolute top-2 left-2 flex flex-col gap-1.5">
                       {!isInStock(product) && (
-                        <span className="bg-foreground text-primary-foreground text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider shadow-sm">
+                        <span className="bg-foreground/90 backdrop-blur-sm text-primary-foreground text-[9px] sm:text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider shadow-sm border border-white/10">
                           Sold Out
                         </span>
                       )}
                       {product.stock === "Low Stock" && isInStock(product) && (
-                        <span className="bg-yellow-500 text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider shadow-sm">
+                        <span className="bg-yellow-500/90 backdrop-blur-sm text-white text-[9px] sm:text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider shadow-sm border border-white/10">
                           Low Stock
                         </span>
                       )}
                       {product.original_price && product.original_price > product.price && (
-                        <span className="bg-primary text-primary-foreground text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider shadow-md">
+                        <span className="bg-primary/90 backdrop-blur-sm text-primary-foreground text-[9px] sm:text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider shadow-md border border-white/10">
                           {Math.round(((product.original_price - product.price) / product.original_price) * 100)}% OFF
                         </span>
                       )}
@@ -277,7 +277,7 @@ const Shop = () => {
                         e.stopPropagation();
                         toggleWishlist(product as any);
                       }}
-                      className="absolute top-4 right-4 w-9 h-9 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all shadow-sm z-10"
+                      className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-9 sm:h-9 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all shadow-sm z-10"
                     >
                       <Heart className={`w-4 h-4 ${isInWishlist(product.id) ? "fill-primary text-primary" : ""}`} />
                     </button>

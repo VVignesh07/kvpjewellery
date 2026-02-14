@@ -76,7 +76,7 @@ const BestSellers = () => {
                   transition={{ delay: i * 0.1 }}
                   className="group bg-card rounded-2xl overflow-hidden shadow-soft hover:shadow-elevated transition-all duration-500 flex flex-col h-full"
                 >
-                  <Link to={`/product/${product.id}`} className="block relative aspect-square overflow-hidden bg-muted/5">
+                  <Link to={`/product/${product.id}`} className="block relative aspect-[4/5] sm:aspect-square overflow-hidden bg-muted/5">
                     <CloudinaryImage
                       src={product.image_url || '/placeholder.svg'}
                       alt={product.name}
@@ -84,14 +84,14 @@ const BestSellers = () => {
                       width={600}
                       height={600}
                     />
-                    <div className="absolute top-4 left-4 flex flex-col gap-2">
+                    <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex flex-col gap-1.5">
                       {product.stock === "Low Stock" && (
-                        <span className="bg-amber-500 text-white text-[9px] px-2.5 py-1 rounded-full font-bold uppercase tracking-widest shadow-sm">
+                        <span className="bg-amber-500/90 backdrop-blur-sm text-white text-[8px] sm:text-[9px] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full font-bold uppercase tracking-widest shadow-sm border border-white/20">
                           Low Stock
                         </span>
                       )}
                       {product.original_price && product.original_price > product.price && (
-                        <span className="bg-primary text-primary-foreground text-[9px] px-2.5 py-1 rounded-full font-bold uppercase tracking-widest shadow-md">
+                        <span className="bg-primary/90 backdrop-blur-sm text-primary-foreground text-[8px] sm:text-[9px] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full font-bold uppercase tracking-widest shadow-md border border-white/20">
                           {Math.round(((product.original_price - product.price) / product.original_price) * 100)}% OFF
                         </span>
                       )}
@@ -104,9 +104,9 @@ const BestSellers = () => {
                         e.stopPropagation();
                         toggleWishlist(product as any);
                       }}
-                      className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all shadow-sm z-10"
+                      className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all shadow-sm z-10"
                     >
-                      <Heart className={`w-5 h-5 ${isInWishlist(product.id) ? "fill-primary text-primary" : ""}`} />
+                      <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${isInWishlist(product.id) ? "fill-primary text-primary" : ""}`} />
                     </button>
                   </Link>
                   <div className="p-3 sm:p-6 flex flex-col flex-grow">
