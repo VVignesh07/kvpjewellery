@@ -136,8 +136,9 @@ const Navbar = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-xl"
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            style={{ willChange: "transform, height, opacity" }}
+            className="lg:hidden overflow-hidden border-b border-border bg-background shadow-lg"
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-1">
               {navLinks.map((link) => (
