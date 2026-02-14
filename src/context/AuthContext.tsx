@@ -188,7 +188,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const signUp = async (data: { email?: string; password: string; fullName?: string; username?: string; phone?: string }) => {
         // Generate a placeholder email if none provided
+        // We add a timestamp or unique hash if needed, but phone-based is usually unique enough
         const userEmail = data.email || `${data.username || Date.now()}@kvp.internal`;
+
+        console.log('📝 Creating account for:', userEmail);
 
         const { data: authData, error } = await supabase.auth.signUp({
             email: userEmail,
@@ -202,26 +205,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             }
         });
 
-        if (!error && authData.user) {
-            // Role assignment
-            await supabase.from('user_roles').upsert({
-                user_id: authData.user.id,
-                role: 'customer'
-            }, { onConflict: 'user_id' });
-
-            // Profile update (Ensure everything is synced)
-            await supabase.from('profiles').upsert({
-                id: authData.user.id,
-                username: data.username,
-                phone_number: data.phone,
-                email: userEmail,
-                full_name: data.fullName
-            }, { onConflict: 'id' });
-
-            // Force fetch profile to update context immediately
-            await fetchProfile(authData.user.id);
+        if (error) {
+            console.error('❌ Sign up error:', error);
+            return { error };
         }
-        return { error };
+
+        // Note: We no longer manually upsert profiles or roles here.
+        // The PostgreSQL trigger 'on_auth_user_created' handles this automatically!
+        // This ensures the operation is atomic and works even if RLS is strict.
+
+        if (authData.user) {
+            console.log('✅ Auth account created, waiting for trigger sync...');
+            // Optional: short delay or just fetch profile to confirm
+            await fetchProfile(authData.user.id);
+            await fetchUserRole(authData.user.id);
+        }
+
+        return { error: null };
     };
 
     const signOut = async () => {
