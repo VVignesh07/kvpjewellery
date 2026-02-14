@@ -63,7 +63,7 @@ const Footer = () => {
             <div className="space-y-6">
               <div className="flex flex-col md:flex-row items-center gap-3 text-gray-400 group">
                 <MapPin className="w-5 h-5 text-amber-500 shrink-0" />
-                <span className="text-sm leading-relaxed max-w-[200px]">Salem & Coimbatore, Tamil Nadu, India</span>
+                <span className="text-sm leading-relaxed max-w-[200px]">Kovilpatti, Tamil Nadu, India</span>
               </div>
               <div className="flex flex-col md:flex-row items-center gap-3 text-gray-400 group">
                 <Mail className="w-5 h-5 text-amber-500 shrink-0" />
