@@ -129,42 +129,51 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu container */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="lg:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-md"
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:hidden overflow-hidden border-b border-border bg-background/95 backdrop-blur-xl"
           >
-            <div className="container mx-auto px-4 py-8 flex flex-col gap-2">
+            <div className="container mx-auto px-4 py-6 flex flex-col gap-1">
               {navLinks.map((link) => (
                 <Link
                   key={link.label}
                   to={link.to}
                   onClick={() => setMobileOpen(false)}
-                  className="text-lg font-semibold py-4 px-5 rounded-2xl text-foreground hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-between group active:scale-[0.98]"
+                  className="text-base sm:text-lg font-semibold py-3.5 px-4 rounded-xl text-foreground hover:bg-primary/5 hover:text-primary transition-all flex items-center justify-between group active:bg-primary/10"
                 >
-                  {link.label}
-                  <span className="text-primary/30 group-hover:translate-x-1 transition-transform">→</span>
+                  <span className="tracking-tight">{link.label}</span>
+                  <span className="text-primary/30 group-hover:translate-x-1 transition-transform text-xl">→</span>
                 </Link>
               ))}
+
               {user && (
-                <>
-                  <div className="border-t border-border my-6 mx-5" />
+                <div className="mt-2 space-y-1">
+                  <div className="border-t border-border/60 my-4 mx-4" />
+                  <Link
+                    to="/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="text-base font-medium py-3.5 px-4 rounded-xl text-muted-foreground hover:bg-primary/5 hover:text-primary transition-all flex items-center gap-4"
+                  >
+                    <User className="h-5 w-5" />
+                    My Account
+                  </Link>
                   <button
                     onClick={() => {
                       handleLogout();
                       setMobileOpen(false);
                     }}
-                    className="text-lg font-semibold py-4 px-5 rounded-2xl text-destructive hover:bg-destructive/10 transition-all text-left flex items-center gap-4 active:scale-[0.98]"
+                    className="w-full text-base font-medium py-3.5 px-4 rounded-xl text-destructive hover:bg-destructive/5 transition-all text-left flex items-center gap-4"
                   >
                     <LogOut className="h-5 w-5" />
                     Logout
                   </button>
-                </>
+                </div>
               )}
             </div>
           </motion.div>
