@@ -29,6 +29,7 @@ const AdminProductForm = () => {
     const [loading, setLoading] = useState(false);
     const [fetching, setFetching] = useState(isEditMode);
     const [images, setImages] = useState<string[]>([]);
+    const [activeCategories, setActiveCategories] = useState<{ id: string; name: string }[]>([]);
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -43,6 +44,22 @@ const AdminProductForm = () => {
             fetchProduct(id);
         }
     }, [id, isEditMode]);
+
+    useEffect(() => {
+        const fetchActiveCategories = async () => {
+            const { data, error } = await supabaseAdmin
+                .from('categories')
+                .select('id, name')
+                .eq('is_active', true)
+                .order('name', { ascending: true });
+            if (!error && data) {
+                setActiveCategories(data);
+            }
+        };
+        if (!isComboMode) {
+            fetchActiveCategories();
+        }
+    }, [isComboMode]);
 
     const fetchProduct = async (productId: string) => {
         setFetching(true);
@@ -243,9 +260,9 @@ const AdminProductForm = () => {
                                                     Combo
                                                 </SelectItem>
                                             ) : (
-                                                ["Earrings", "Rings", "Necklaces", "Bangles", "Pendants", "Chains"].map(cat => (
-                                                    <SelectItem key={cat} value={cat} className="rounded-xl p-3 font-medium cursor-pointer">
-                                                        {cat}
+                                                activeCategories.map(cat => (
+                                                    <SelectItem key={cat.id} value={cat.name} className="rounded-xl p-3 font-medium cursor-pointer">
+                                                        {cat.name}
                                                     </SelectItem>
                                                 ))
                                             )}

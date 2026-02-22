@@ -10,7 +10,7 @@ export interface Product {
   originalPrice?: number;
   original_price?: number;
   description: string;
-  category: "earrings" | "rings" | "necklaces" | "bangles";
+  category: string;
   image: string;
   images: string[];
   inStock: boolean;

@@ -132,8 +132,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, [fetchProfile, fetchUserRole]);
 
     const signIn = async (email: string, password: string) => {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        return { error };
+        try {
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            return { error };
+        } catch (err) {
+            const isNetworkError = err instanceof TypeError && err.message.toLowerCase().includes('fetch');
+            return {
+                error: {
+                    message: isNetworkError
+                        ? 'No internet connection. Please check your network and try again.'
+                        : 'An unexpected error occurred. Please try again.'
+                } as any
+            };
+        }
     };
 
     const signInWithIdentifier = async (identifier: string, password: string) => {
@@ -147,43 +158,74 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         // 2. Try Phone or Username lookup
-        // We use quotes "val" for values in .or() to handle special characters
-        console.log(`🔍 Searching profiles for identifier: "${trimmedIdentifier}"`);
-        const { data: profileData, error: lookupError } = await supabase
-            .from('profiles')
-            .select('email, username, phone_number')
-            .or(`username.eq."${trimmedIdentifier}",phone_number.eq."${trimmedIdentifier}"`)
-            .maybeSingle();
+        try {
+            console.log(`🔍 Searching profiles for identifier: "${trimmedIdentifier}"`);
+            const { data: profileData, error: lookupError } = await supabase
+                .from('profiles')
+                .select('email, username, phone_number')
+                .or(`username.eq."${trimmedIdentifier}",phone_number.eq."${trimmedIdentifier}"`)
+                .maybeSingle();
 
-        if (lookupError) {
-            console.error('❌ Profile lookup query error:', lookupError);
+            if (lookupError) {
+                console.error('❌ Profile lookup query error:', lookupError);
+            }
+
+            if (profileData?.email) {
+                console.log('✅ Found account email:', profileData.email);
+                return await signIn(profileData.email, password);
+            }
+
+            console.warn('⚠️ No account found with that username or phone number.');
+            return { error: { message: "Invalid username, phone, or password. Please try again." } };
+        } catch (err) {
+            const isNetworkError = err instanceof TypeError && err.message.toLowerCase().includes('fetch');
+            return {
+                error: {
+                    message: isNetworkError
+                        ? 'No internet connection. Please check your network and try again.'
+                        : 'An unexpected error occurred. Please try again.'
+                } as any
+            };
         }
-
-        if (profileData?.email) {
-            console.log('✅ Found account email:', profileData.email);
-            return await signIn(profileData.email, password);
-        }
-
-        console.warn('⚠️ No account found with that username or phone number.');
-        // Fallback or Error
-        return { error: { message: "Invalid username, phone, or password. Please try again." } };
     };
 
     const signInWithOTP = async (email: string) => {
-        const { error } = await supabase.auth.signInWithOtp({
-            email,
-            options: { shouldCreateUser: true }
-        });
-        return { error };
+        try {
+            const { error } = await supabase.auth.signInWithOtp({
+                email,
+                options: { shouldCreateUser: true }
+            });
+            return { error };
+        } catch (err) {
+            const isNetworkError = err instanceof TypeError && err.message.toLowerCase().includes('fetch');
+            return {
+                error: {
+                    message: isNetworkError
+                        ? 'No internet connection. Please check your network and try again.'
+                        : 'An unexpected error occurred. Please try again.'
+                } as any
+            };
+        }
     };
 
     const verifyOTP = async (email: string, token: string) => {
-        const { error } = await supabase.auth.verifyOtp({
-            email,
-            token,
-            type: 'email'
-        });
-        return { error };
+        try {
+            const { error } = await supabase.auth.verifyOtp({
+                email,
+                token,
+                type: 'email'
+            });
+            return { error };
+        } catch (err) {
+            const isNetworkError = err instanceof TypeError && err.message.toLowerCase().includes('fetch');
+            return {
+                error: {
+                    message: isNetworkError
+                        ? 'No internet connection. Please check your network and try again.'
+                        : 'An unexpected error occurred. Please try again.'
+                } as any
+            };
+        }
     };
 
     const signUp = async (data: { email?: string; password: string; fullName?: string; username?: string; phone?: string }) => {

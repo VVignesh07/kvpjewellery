@@ -140,7 +140,7 @@ const BestSellers = () => {
                             name: product.name,
                             price: product.price,
                             image: product.image_url,
-                            category: product.category as "earrings" | "rings" | "necklaces" | "bangles",
+                            category: product.category,
                             inStock: isAvailable,
                             description: "",
                             images: [product.image_url],

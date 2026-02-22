@@ -190,7 +190,7 @@ const Combo = () => {
                                                         name: product.name,
                                                         price: product.price,
                                                         image: product.image_url,
-                                                        category: "necklaces", // Placeholder for logic
+                                                        category: product.category,
                                                         inStock: isInStock(product),
                                                         description: product.description || "",
                                                         images: [product.image_url],
