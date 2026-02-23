@@ -31,6 +31,7 @@ const Checkout = () => {
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [currentOrderData, setCurrentOrderData] = useState<any>(null);
   const [paymentLink, setPaymentLink] = useState("");
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const shippingFee = totalAmount > 500 ? 0 : 50;
   const grandTotal = totalAmount + shippingFee;
@@ -130,14 +131,19 @@ const Checkout = () => {
           orderId: orderData.id,
         });
 
-        // Open UPI payment app
-        window.location.href = upiLink;
+        // Open UPI payment app ONLY on mobile to avoid deep link errors on desktop
+        if (isMobile) {
+          console.log("📱 Mobile device detected, attempting to launch UPI app...");
+          window.location.href = upiLink;
+        } else {
+          console.log("💻 Desktop device detected, skipping automatic UPI redirect.");
+        }
 
         // Show payment confirmation dialog after a short delay
         setTimeout(() => {
           setShowPaymentDialog(true);
           setLoading(false);
-        }, 1000);
+        }, isMobile ? 1000 : 100); // Faster on desktop since there's no redirect attempt
 
       } else {
         // COD Flow: Direct to WhatsApp
@@ -370,7 +376,12 @@ const Checkout = () => {
               </div>
               <DialogTitle className="text-center text-xl">Payment Confirmation</DialogTitle>
               <DialogDescription className="text-center">
-                Have you completed the payment of <span className="font-bold text-primary">₹{grandTotal.toLocaleString("en-IN")}</span> via UPI?
+                {isMobile
+                  ? "Open your UPI app to pay or scan the QR code below."
+                  : "Please scan the QR code below using any UPI app to complete your payment."
+                }
+                <br />
+                Amount: <span className="font-bold text-primary">₹{grandTotal.toLocaleString("en-IN")}</span>
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="flex-col sm:flex-col gap-2 mt-4">
@@ -418,7 +429,7 @@ const Checkout = () => {
                         <span className="text-amber-700 text-xs font-bold">1</span>
                       </div>
                       <p className="text-xs text-amber-900 leading-relaxed">
-                        Scan the QR code and pay <span className="font-bold">₹{grandTotal.toLocaleString("en-IN")}</span>.
+                        {isMobile ? "Open UPI app or scan QR" : "Scan the QR code"} and pay <span className="font-bold">₹{grandTotal.toLocaleString("en-IN")}</span>.
                       </p>
                     </div>
                     <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-xl border border-amber-100">
@@ -441,12 +452,10 @@ const Checkout = () => {
                 </div>
               )}
 
-              {paymentMethod === "upi" && paymentLink && (
+              {paymentMethod === "upi" && paymentLink && isMobile && (
                 <a
                   href={paymentLink}
                   className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-blue-600 text-white font-medium text-sm hover:bg-blue-700 transition-all mb-2"
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   <CreditCard className="w-4 h-4" />
                   Open Payment App
