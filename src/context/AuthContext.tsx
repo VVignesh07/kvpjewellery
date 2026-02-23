@@ -148,7 +148,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const signInWithIdentifier = async (identifier: string, password: string) => {
-        const trimmedIdentifier = identifier.trim();
+        let trimmedIdentifier = identifier.trim();
         console.log('🔑 Attempting login for:', trimmedIdentifier);
 
         // 1. Try Email direct sign in
@@ -157,17 +157,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             return await signIn(trimmedIdentifier, password);
         }
 
-        // 2. Try Phone or Username lookup
+        // 2. Normalize identifier if it looks like a phone number
+        // Remove spaces, dashes, or parentheses often used in phone formats
+        const numericIdentifier = trimmedIdentifier.replace(/[\s\-\(\)]/g, '');
+        if (/^\+?\d{8,15}$/.test(numericIdentifier)) {
+            console.log('📱 Detected phone format, using normalized version:', numericIdentifier);
+            trimmedIdentifier = numericIdentifier;
+        }
+
+        // 3. Try Phone or Username lookup
         try {
             console.log(`🔍 Searching profiles for identifier: "${trimmedIdentifier}"`);
+
+            // NOTE: In Supabase .or() filter, we should NOT use double quotes around string values.
+            // Double quotes are interpreted as column names.
             const { data: profileData, error: lookupError } = await supabase
                 .from('profiles')
                 .select('email, username, phone_number')
-                .or(`username.eq."${trimmedIdentifier}",phone_number.eq."${trimmedIdentifier}"`)
+                .or(`username.eq.${trimmedIdentifier},phone_number.eq.${trimmedIdentifier}`)
                 .maybeSingle();
 
             if (lookupError) {
                 console.error('❌ Profile lookup query error:', lookupError);
+                return { error: { message: "Internal server error during lookup." } };
             }
 
             if (profileData?.email) {
@@ -178,6 +190,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             console.warn('⚠️ No account found with that username or phone number.');
             return { error: { message: "Invalid username, phone, or password. Please try again." } };
         } catch (err) {
+            console.error('❌ Login catch block error:', err);
             const isNetworkError = err instanceof TypeError && err.message.toLowerCase().includes('fetch');
             return {
                 error: {
