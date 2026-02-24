@@ -26,12 +26,17 @@ const Checkout = () => {
   const { items, totalAmount, clearCart } = useCart();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: "", phone: "", address: "", pincode: "" });
+  const [errors, setErrors] = useState({ phone: "", pincode: "" });
+  const [touched, setTouched] = useState({ phone: false, pincode: false });
   const [paymentMethod, setPaymentMethod] = useState<"upi" | "cod">("upi");
   const [loading, setLoading] = useState(false);
   const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [currentOrderData, setCurrentOrderData] = useState<any>(null);
   const [paymentLink, setPaymentLink] = useState("");
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  const validatePhone = (val: string) => !/^\d{10}$/.test(val) ? "Invalid phone number" : "";
+  const validatePincode = (val: string) => !/^\d{6}$/.test(val) ? "Invalid pincode" : "";
 
   const shippingFee = totalAmount > 500 ? 0 : 50;
   const grandTotal = totalAmount + shippingFee;
@@ -56,8 +61,18 @@ const Checkout = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const phoneErr = validatePhone(form.phone);
+    const pincodeErr = validatePincode(form.pincode);
+    setErrors({ phone: phoneErr, pincode: pincodeErr });
+    setTouched({ phone: true, pincode: true });
+
     if (!form.name || !form.phone || !form.address || !form.pincode) {
       toast.error("Please fill all fields");
+      return;
+    }
+
+    if (phoneErr || pincodeErr) {
       return;
     }
 
@@ -290,29 +305,63 @@ const Checkout = () => {
             <label className="block text-xs font-medium text-muted-foreground mb-1.5">Mobile Number</label>
             <input
               type="tel"
+              inputMode="numeric"
               value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-              placeholder="+91 88255 64893"
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                setForm({ ...form, phone: val });
+                if (touched.phone) setErrors((prev) => ({ ...prev, phone: validatePhone(val) }));
+              }}
+              onBlur={() => {
+                setTouched((prev) => ({ ...prev, phone: true }));
+                setErrors((prev) => ({ ...prev, phone: validatePhone(form.phone) }));
+              }}
+              className={`w-full px-4 py-3 rounded-xl border bg-card text-foreground text-sm focus:outline-none focus:ring-2 transition-all ${errors.phone && touched.phone
+                ? "border-red-400 focus:ring-red-200 focus:border-red-400"
+                : "border-border focus:ring-primary/30 focus:border-primary"
+                }`}
+              placeholder="10-digit mobile number"
+              maxLength={10}
               required
             />
+            {errors.phone && touched.phone && (
+              <p className="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+                <span>⚠</span> {errors.phone}
+              </p>
+            )}
           </div>
           <div>
             <label className="block text-xs font-medium text-muted-foreground mb-1.5">Pincode</label>
             <input
               type="text"
+              inputMode="numeric"
               value={form.pincode}
-              onChange={(e) => setForm({ ...form, pincode: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border border-border bg-card text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-              placeholder="Enter pincode to check COD availability"
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+                setForm({ ...form, pincode: val });
+                if (touched.pincode) setErrors((prev) => ({ ...prev, pincode: validatePincode(val) }));
+              }}
+              onBlur={() => {
+                setTouched((prev) => ({ ...prev, pincode: true }));
+                setErrors((prev) => ({ ...prev, pincode: validatePincode(form.pincode) }));
+              }}
+              className={`w-full px-4 py-3 rounded-xl border bg-card text-foreground text-sm focus:outline-none focus:ring-2 transition-all ${errors.pincode && touched.pincode
+                ? "border-red-400 focus:ring-red-200 focus:border-red-400"
+                : "border-border focus:ring-primary/30 focus:border-primary"
+                }`}
+              placeholder="6-digit pincode"
               maxLength={6}
               required
             />
-            {form.pincode.length >= 6 && (
-              <p className={`text-xs mt-1 ${isCodAvailable ? 'text-green-600' : 'text-red-500'}`}>
-                {isCodAvailable ? "Cash on Delivery available for this location" : "Cash on Delivery is NOT available for this location"}
+            {errors.pincode && touched.pincode ? (
+              <p className="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+                <span>⚠</span> {errors.pincode}
               </p>
-            )}
+            ) : form.pincode.length === 6 ? (
+              <p className={`text-xs mt-1.5 ${isCodAvailable ? 'text-green-600' : 'text-orange-500'}`}>
+                {isCodAvailable ? "✓ Cash on Delivery available" : "✕ COD not available for this pincode"}
+              </p>
+            ) : null}
           </div>
           <div>
             <label className="block text-xs font-medium text-muted-foreground mb-1.5">Delivery Address</label>
@@ -328,28 +377,53 @@ const Checkout = () => {
 
           {/* Payment method */}
           <div>
-            <label className="block text-xs font-medium text-muted-foreground mb-2">Payment Method</label>
-            <div className={`flex gap-3 ${!isCodAvailable ? 'flex-col' : ''}`}>
+            <label className="block text-xs font-medium text-muted-foreground mb-3">Payment Method</label>
+            <div className="grid grid-cols-1 gap-3">
+              {/* UPI Option */}
               <button
                 type="button"
                 onClick={() => setPaymentMethod("upi")}
-                className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${paymentMethod === "upi"
-                  ? "gradient-gold text-primary-foreground border-transparent shadow-gold"
-                  : "border-border text-muted-foreground hover:border-primary"
+                className={`relative flex items-center gap-4 px-4 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 ${paymentMethod === "upi"
+                  ? "border-primary bg-primary/5 shadow-sm"
+                  : "border-border bg-card hover:border-primary/50"
                   }`}
               >
-                UPI (GPay / PhonePe)
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg font-bold transition-all ${paymentMethod === "upi" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                  }`}>
+                  ₹
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm font-semibold ${paymentMethod === "upi" ? "text-foreground" : "text-muted-foreground"}`}>UPI Payment</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">GPay · PhonePe · Paytm · Any UPI</p>
+                </div>
+                <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 transition-all flex items-center justify-center ${paymentMethod === "upi" ? "border-primary" : "border-border"
+                  }`}>
+                  {paymentMethod === "upi" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                </div>
               </button>
+
+              {/* COD Option */}
               {isCodAvailable && (
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("cod")}
-                  className={`flex-1 py-3 rounded-xl border text-sm font-medium transition-all ${paymentMethod === "cod"
-                    ? "gradient-gold text-primary-foreground border-transparent shadow-gold"
-                    : "border-border text-muted-foreground hover:border-primary"
+                  className={`relative flex items-center gap-4 px-4 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 ${paymentMethod === "cod"
+                    ? "border-primary bg-primary/5 shadow-sm"
+                    : "border-border bg-card hover:border-primary/50"
                     }`}
                 >
-                  Cash on Delivery
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg transition-all ${paymentMethod === "cod" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
+                    }`}>
+                    💵
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold ${paymentMethod === "cod" ? "text-foreground" : "text-muted-foreground"}`}>Cash on Delivery</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">Pay when your order arrives</p>
+                  </div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 transition-all flex items-center justify-center ${paymentMethod === "cod" ? "border-primary" : "border-border"
+                    }`}>
+                    {paymentMethod === "cod" && <div className="w-2.5 h-2.5 rounded-full bg-primary" />}
+                  </div>
                 </button>
               )}
             </div>

@@ -31,14 +31,17 @@ const Cart = () => {
     );
   }
 
+  const shippingFee = totalAmount > 500 ? 0 : 50;
+  const grandTotal = totalAmount + shippingFee;
+
   const quickWhatsAppUrl = generateWhatsAppOrderUrl({
     products: items.map((item) => ({
       name: item.product.name,
       price: item.product.price * item.quantity,
       quantity: item.quantity,
     })),
-    total: totalAmount,
-    shippingFee: 0,
+    total: grandTotal,
+    shippingFee: shippingFee,
     customerName: "[Your Name]",
     customerPhone: "[Your Phone]",
     customerAddress: "[Your Address]",
