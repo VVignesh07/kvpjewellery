@@ -259,11 +259,8 @@ const ProductDetail = () => {
         title={`${product.name} — Luxury Gold Jewellery | KVP`}
         description={product.description?.substring(0, 160) || `Buy handcrafted ${product.name} at KVP JEWELLERY. Premium quality gold jewellery for every occasion.`}
         image={product.image_url}
+        structuredData={structuredData}
       />
-
-      <script type="application/ld+json">
-        {JSON.stringify(structuredData)}
-      </script>
 
       <div className="container mx-auto px-4">
         <Button

@@ -17,6 +17,8 @@ type CartContextType = {
   clearCart: () => void;
   totalItems: number;
   totalAmount: number;
+  isDrawerOpen: boolean;
+  setDrawerOpen: (open: boolean) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -28,6 +30,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedCart = localStorage.getItem("cartLines");
     return savedCart ? JSON.parse(savedCart) : [];
   });
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
 
   // Sync with Supabase when user changes
   React.useEffect(() => {
@@ -134,6 +137,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return newItems;
     });
 
+    setDrawerOpen(true);
+
     // Supabase Sync - Optimized with upsert
     if (user) {
       try {
@@ -228,8 +233,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const totalAmount = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   const value = useMemo(() => ({
-    items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalAmount
-  }), [items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalAmount]);
+    items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalAmount, isDrawerOpen, setDrawerOpen
+  }), [items, addToCart, removeFromCart, updateQuantity, clearCart, totalItems, totalAmount, isDrawerOpen, setDrawerOpen]);
 
   return (
     <CartContext.Provider value={value}>

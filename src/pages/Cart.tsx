@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { generateWhatsAppOrderUrl } from "@/lib/whatsapp";
 import { toast } from "sonner";
 import MetaTags from "@/components/seo/MetaTags";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 const Cart = () => {
   const { items, updateQuantity, removeFromCart, totalAmount } = useCart();
@@ -90,9 +91,11 @@ const Cart = () => {
               className="flex gap-4 bg-card rounded-2xl p-4 shadow-soft border border-border"
             >
               <Link to={`/product/${item.product.id}`} className="w-20 h-20 lg:w-24 lg:h-24 rounded-xl overflow-hidden flex-shrink-0">
-                <img
+                <CloudinaryImage
                   src={item.product.image || item.product.image_url || '/placeholder.svg'}
                   alt={item.product.name}
+                  width={100}
+                  height={100}
                   className="w-full h-full object-cover"
                 />
               </Link>

@@ -5,6 +5,9 @@ interface MetaTagsProps {
     description?: string;
     image?: string;
     url?: string;
+    keywords?: string;
+    robots?: string;
+    structuredData?: object;
 }
 
 const MetaTags = ({
@@ -12,6 +15,9 @@ const MetaTags = ({
     description = "Discover handcrafted luxury gold jewellery at KVP JEWELLERY — earrings, rings, necklaces & bangles.",
     image = "https://res.cloudinary.com/demo/image/upload/v1/kvp_fancy_jewellery_og.jpg",
     url = window.location.href,
+    keywords = "gold jewellery, bridal jewellery, necklaces, rings, earrings, bangles, KVP Jewellery",
+    robots = "index, follow",
+    structuredData,
 }: MetaTagsProps) => {
     useEffect(() => {
         // Update Document Title
@@ -24,6 +30,8 @@ const MetaTags = ({
         };
 
         updateMeta('meta[name="description"]', "content", description);
+        updateMeta('meta[name="keywords"]', "content", keywords);
+        updateMeta('meta[name="robots"]', "content", robots);
         updateMeta('link[rel="canonical"]', "href", url);
 
         // Open Graph
@@ -39,7 +47,15 @@ const MetaTags = ({
         updateMeta('meta[property="twitter:url"]', "content", url);
     }, [title, description, image, url]);
 
-    return null;
+    return (
+        <>
+            {structuredData && (
+                <script type="application/ld+json">
+                    {JSON.stringify(structuredData)}
+                </script>
+            )}
+        </>
+    );
 };
 
 export default MetaTags;

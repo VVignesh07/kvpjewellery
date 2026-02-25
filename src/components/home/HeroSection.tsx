@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/lib/supabaseClient";
 import heroImage from "@/assets/hero-jewellery.jpg";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 interface HeroSlide {
   id: string;
@@ -142,14 +143,13 @@ const HeroSection = () => {
         >
           {/* Background image */}
           <div className="absolute inset-0 bg-neutral-900">
-            <img
+            <CloudinaryImage
               src={currentSlide.image_url}
               alt={currentSlide.title || "Luxury gold jewellery"}
+              width={1920}
+              height={1080}
               className="w-full h-full object-cover object-[center_20%] lg:object-center transition-opacity duration-500"
-              loading="eager"
-              // @ts-ignore
-              fetchpriority={currentIndex === 0 ? "high" : "auto"}
-              decoding="async"
+              priority={currentIndex === 0}
             />
             <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-foreground/90 via-foreground/60 to-foreground/20 lg:to-transparent" />
           </div>

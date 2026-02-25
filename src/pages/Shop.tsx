@@ -154,11 +154,28 @@ const Shop = () => {
     ? `Browse our exclusive ${categoryFilter} collection. Handcrafted luxury gold jewellery at the best prices.`
     : "Discover our full collection of handcrafted gold jewellery, including earrings, rings, necklaces, and bangles.";
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": seoTitle,
+    "description": seoDescription,
+    "url": window.location.href,
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": products.slice(0, 10).map((product, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "url": `${window.location.origin}/product/${product.id}`
+      }))
+    }
+  };
+
   return (
     <main className="min-h-screen bg-background">
       <MetaTags
         title={seoTitle}
         description={seoDescription}
+        structuredData={structuredData}
       />
       {/* Header */}
       <section className="relative py-12 lg:py-16 overflow-hidden bg-[#2D1B10]">
@@ -250,6 +267,8 @@ const Shop = () => {
                     <CloudinaryImage
                       src={product.image_url || '/placeholder.svg'}
                       alt={product.name}
+                      width={400}
+                      height={400}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute top-2 left-2 flex flex-col gap-1.5">

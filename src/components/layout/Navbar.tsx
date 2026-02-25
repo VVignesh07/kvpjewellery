@@ -14,9 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 
 const Navbar = () => {
-  const { totalItems } = useCart();
+  const { totalItems, setDrawerOpen } = useCart();
   const { totalItems: wishlistCount } = useWishlist();
   const { user, profile, signOut, displayIdentifier } = useAuth();
   const navigate = useNavigate();
@@ -110,14 +111,18 @@ const Navbar = () => {
             )}
           </Link>
 
-          <Link to="/cart" className="relative p-2.5 hover:text-primary transition-colors">
+          <button
+            onClick={() => setDrawerOpen(true)}
+            className="relative p-2.5 hover:text-primary transition-colors focus:outline-none"
+            title="Shopping Cart"
+          >
             <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
             {totalItems > 0 && (
               <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-[10px] flex items-center justify-center font-bold shadow-sm">
                 {totalItems}
               </span>
             )}
-          </Link>
+          </button>
           <motion.button
             whileTap={{ scale: 0.9 }}
             className="lg:hidden p-2.5 text-foreground hover:bg-muted rounded-full transition-colors relative z-[60]"
@@ -180,6 +185,7 @@ const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <CartDrawer />
     </header>
   );
 };
