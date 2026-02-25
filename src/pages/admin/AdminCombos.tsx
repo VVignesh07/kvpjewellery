@@ -33,6 +33,7 @@ import {
 import { supabaseAdmin } from "@/lib/supabaseAdminClient";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 interface Product {
     id: string;
@@ -211,10 +212,12 @@ const AdminCombos = () => {
                                         className="group border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
                                     >
                                         <TableCell className="pl-8 py-5">
-                                            <div className="w-16 h-16 bg-gray-100 rounded-2xl overflow-hidden shadow-sm group-hover:scale-110 transition-transform duration-300">
-                                                <img
-                                                    src={product.image_url || '/placeholder.svg'}
+                                            <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-sm group-hover:scale-110 transition-transform duration-300">
+                                                <CloudinaryImage
+                                                    src={product.image_url}
                                                     alt={product.name}
+                                                    width={64}
+                                                    height={64}
                                                     className="w-full h-full object-cover"
                                                 />
                                             </div>

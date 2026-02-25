@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 interface HeroSlide {
     id: string;
@@ -209,9 +210,11 @@ const AdminHeroSlider = () => {
                     <Card key={slide.id} className="overflow-hidden flex flex-col group border-border/40 hover:border-primary/40 transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 bg-card/50 backdrop-blur-sm">
                         <CardHeader className="p-0 relative">
                             <div className="relative aspect-[21/9] bg-muted overflow-hidden">
-                                <img
+                                <CloudinaryImage
                                     src={slide.image_url}
                                     alt={slide.title || "Hero Slide"}
+                                    width={800}
+                                    height={340}
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
                                 <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />

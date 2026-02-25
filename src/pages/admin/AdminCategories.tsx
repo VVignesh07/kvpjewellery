@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
 
 interface Category {
     id: string;
@@ -265,9 +266,11 @@ const AdminCategories = () => {
                         <CardHeader className="p-0">
                             {category.image_url ? (
                                 <div className="relative w-full h-48 bg-muted">
-                                    <img
+                                    <CloudinaryImage
                                         src={category.image_url}
                                         alt={category.name}
+                                        width={400}
+                                        height={200}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>

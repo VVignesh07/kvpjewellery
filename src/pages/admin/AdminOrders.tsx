@@ -396,35 +396,39 @@ const AdminOrders = () => {
                                             </div>
 
                                             {/* Order Financials & Actions */}
-                                            <div className="p-6 lg:p-8 bg-gray-50/30 lg:w-80 flex flex-col justify-between gap-6">
-                                                <div className="text-left lg:text-right">
-                                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Total Value</p>
-                                                    <div className="text-2xl lg:text-4xl font-black text-gray-900 tracking-tighter">
-                                                        ₹{order.total_amount.toLocaleString("en-IN")}
+                                            <div className="p-6 lg:p-8 bg-gray-50/10 lg:w-[380px] flex flex-col justify-between gap-6 border-t lg:border-t-0 lg:border-l border-gray-100">
+                                                <div className="flex items-center justify-between lg:justify-end gap-6">
+                                                    <div className="text-left lg:text-right">
+                                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1 leading-none">Total Value</p>
+                                                        <div className="text-2xl lg:text-3xl font-black text-gray-900 tracking-tighter">
+                                                            ₹{order.total_amount.toLocaleString("en-IN")}
+                                                        </div>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex gap-2 flex-wrap md:flex-nowrap">
-                                                    <Select
-                                                        value={order.status}
-                                                        onValueChange={(value) => handleStatusChange(order.id, value)}
-                                                    >
-                                                        <SelectTrigger className="flex-1 min-w-[140px] h-12 rounded-xl bg-white border-2 border-gray-100 font-bold text-[10px] sm:text-xs uppercase tracking-widest focus:ring-amber-500/20">
-                                                            <SelectValue />
-                                                        </SelectTrigger>
-                                                        <SelectContent className="rounded-2xl border-none shadow-2xl p-2 capitalize">
-                                                            {Object.keys(statusThemes).map(status => (
-                                                                <SelectItem key={status} value={status} className="rounded-xl p-3 font-bold cursor-pointer text-xs">
-                                                                    {status.replace("_", " ")}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
-                                                    <div className="flex gap-2 w-full sm:w-auto">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex-1">
+                                                        <Select
+                                                            value={order.status}
+                                                            onValueChange={(value) => handleStatusChange(order.id, value)}
+                                                        >
+                                                            <SelectTrigger className="w-full h-11 rounded-xl bg-white border border-gray-200 font-bold text-[10px] uppercase tracking-widest focus:ring-amber-500/20 shadow-sm">
+                                                                <SelectValue />
+                                                            </SelectTrigger>
+                                                            <SelectContent className="rounded-2xl border-none shadow-2xl p-2 capitalize">
+                                                                {Object.keys(statusThemes).map(status => (
+                                                                    <SelectItem key={status} value={status} className="rounded-xl p-3 font-bold cursor-pointer text-xs">
+                                                                        {status.replace("_", " ")}
+                                                                    </SelectItem>
+                                                                ))}
+                                                            </SelectContent>
+                                                        </Select>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
                                                         <Button
                                                             variant="outline"
                                                             size="icon"
-                                                            className="flex-1 sm:h-12 sm:w-12 h-12 rounded-xl border-2 border-emerald-100 text-emerald-600 hover:bg-emerald-50 hover:border-emerald-200 transition-all"
+                                                            className="h-11 w-11 rounded-xl border border-gray-200 text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-100 transition-all shadow-sm"
                                                             title="WhatsApp Actions"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
@@ -441,7 +445,7 @@ const AdminOrders = () => {
                                                         <Button
                                                             variant="outline"
                                                             size="icon"
-                                                            className="flex-1 sm:h-12 sm:w-12 h-12 rounded-xl border-2 border-gray-100 hover:bg-white hover:text-amber-600 transition-all hover:border-amber-100"
+                                                            className="h-11 w-11 rounded-xl border border-gray-200 text-gray-600 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-100 transition-all shadow-sm"
                                                             onClick={() => {
                                                                 setSelectedOrder(order);
                                                                 setTrackingNumber(order.tracking_number || "");
@@ -452,9 +456,9 @@ const AdminOrders = () => {
                                                             <Eye className="w-5 h-5" />
                                                         </Button>
                                                         <Button
-                                                            variant="ghost"
+                                                            variant="outline"
                                                             size="icon"
-                                                            className="flex-1 sm:h-12 sm:w-12 h-12 rounded-xl text-rose-300 hover:text-rose-600 hover:bg-rose-50 transition-all"
+                                                            className="h-11 w-11 rounded-xl border border-gray-200 text-gray-400 hover:text-rose-600 hover:bg-rose-50 hover:border-rose-100 transition-all shadow-sm"
                                                             onClick={() => { setOrderToDelete(order.id); setDeleteDialogOpen(true); }}
                                                         >
                                                             <Trash2 className="w-5 h-5" />
