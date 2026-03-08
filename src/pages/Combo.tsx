@@ -174,9 +174,9 @@ const Combo = () => {
                                                         <span className="text-[10px] md:text-xs text-muted-foreground line-through opacity-60 italic">₹{product.original_price.toLocaleString("en-IN")}</span>
                                                     )}
                                                 </div>
-                                                <div className="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 md:px-2 md:py-1 rounded-lg w-fit">
+                                                <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-900/30 px-1.5 py-0.5 md:px-2 md:py-1 rounded-lg w-fit">
                                                     <Star className="w-2.5 h-2.5 md:w-3 h-3 fill-amber-400 text-amber-400" />
-                                                    <span className="text-[10px] md:text-xs font-bold text-amber-700">
+                                                    <span className="text-[10px] md:text-xs font-bold text-amber-700 dark:text-amber-300">
                                                         {product.avg_rating ? Number(product.avg_rating).toFixed(1) : "5.0"}
                                                     </span>
                                                 </div>

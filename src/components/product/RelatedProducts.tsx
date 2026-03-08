@@ -81,9 +81,9 @@ const RelatedProducts = ({ currentProductId, category }: RelatedProductsProps) =
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                             <div className="absolute top-2 left-2 flex flex-col gap-1.5">
-                                {product.stock !== "In Stock" && (
+                                {product.stock === "Out of Stock" && (
                                     <span className="bg-black/60 text-white text-[10px] px-2 py-1 rounded-full font-bold uppercase tracking-wider backdrop-blur-sm shadow-sm">
-                                        {product.stock === "Low Stock" ? "Low Stock" : "Sold Out"}
+                                        Sold Out
                                     </span>
                                 )}
                                 {product.original_price && product.original_price > product.price && (
@@ -105,9 +105,9 @@ const RelatedProducts = ({ currentProductId, category }: RelatedProductsProps) =
                                         <p className="text-[10px] text-muted-foreground line-through opacity-70">₹{product.original_price.toLocaleString("en-IN")}</p>
                                     )}
                                 </div>
-                                <div className="flex items-center gap-1 bg-amber-50 px-1.5 py-0.5 rounded-md self-end">
+                                <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-900/30 px-1.5 py-0.5 rounded-md self-end">
                                     <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
-                                    <span className="text-[10px] font-bold text-amber-700">
+                                    <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300">
                                         {product.avg_rating ? Number(product.avg_rating).toFixed(1) : "5.0"}
                                     </span>
                                 </div>

@@ -7,6 +7,7 @@ interface CloudinaryImageProps extends React.ImgHTMLAttributes<HTMLImageElement>
     width?: number | string;
     height?: number | string;
     priority?: boolean;
+    quality?: "auto" | "auto:low" | "auto:good" | "auto:best";
 }
 
 export const CloudinaryImage = ({
@@ -16,9 +17,9 @@ export const CloudinaryImage = ({
     className,
     alt,
     priority = false,
+    quality = "auto",
     ...props
 }: CloudinaryImageProps) => {
-    const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
 
     // If no src, return placeholder immediately
@@ -42,7 +43,7 @@ export const CloudinaryImage = ({
         if (parts.length !== 2) return url;
 
         const [baseUrl, path] = parts;
-        const transformations = ["f_auto", "q_auto", "c_fill"];
+        const transformations = ["f_auto", `q_${quality}`, "c_fill"];
 
         if (w) transformations.push(`w_${w}`);
         if (h) transformations.push(`h_${h}`);
@@ -62,29 +63,15 @@ export const CloudinaryImage = ({
     }
 
     return (
-        <div
-            className={cn(
-                "relative overflow-hidden bg-muted/20",
-                className
-            )}
-        >
-            <img
-                src={optimizedSrc}
-                alt={alt || "Image"}
-                className={cn(
-                    "w-full h-full object-cover transition-opacity duration-300",
-                    loaded ? "opacity-100" : "opacity-0"
-                )}
-                loading={priority ? "eager" : "lazy"}
-                onLoad={() => setLoaded(true)}
-                onError={() => setError(true)}
-                {...props}
-            />
-            {!loaded && !error && (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted/20 animate-pulse">
-                    <div className="text-xs text-muted-foreground">Loading...</div>
-                </div>
-            )}
-        </div>
+        <img
+            src={optimizedSrc}
+            alt={alt || "Image"}
+            className={cn("w-full h-full object-cover", className)}
+            loading={priority ? "eager" : "lazy"}
+            decoding={priority ? "sync" : "async"}
+            {...(priority ? { fetchPriority: "high" } as any : {})}
+            onError={() => setError(true)}
+            {...props}
+        />
     );
 };

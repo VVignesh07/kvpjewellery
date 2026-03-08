@@ -122,13 +122,11 @@ const ProductDetail = () => {
 
   const getStockLabel = (product: Product) => {
     if (product.stock_quantity !== undefined) {
-      if (product.stock_quantity <= 0) return { text: "Out of Stock", color: "text-red-600 bg-red-50" };
-      if (product.stock_quantity < 5) return { text: `Low Stock: Only ${product.stock_quantity} left!`, color: "text-orange-600 bg-orange-50" };
-      return { text: "In Stock", color: "text-green-600 bg-green-50" };
+      if (product.stock_quantity <= 0) return { text: "Out of Stock", color: "text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400" };
+      return { text: "In Stock", color: "text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400" };
     }
-    if (product.stock === "Out of Stock") return { text: "Out of Stock", color: "text-red-600 bg-red-50" };
-    if (product.stock === "Low Stock") return { text: "Low Stock", color: "text-orange-600 bg-orange-50" };
-    return { text: "In Stock", color: "text-green-600 bg-green-50" };
+    if (product.stock === "Out of Stock") return { text: "Out of Stock", color: "text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-400" };
+    return { text: "In Stock", color: "text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400" };
   };
 
   const handleAddToCart = () => {
@@ -294,14 +292,14 @@ const ProductDetail = () => {
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-border/50 flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110 z-10"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm border border-border/50 flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-all hover:bg-white dark:hover:bg-black/70 hover:scale-110 z-10"
                     aria-label="Previous image"
                   >
                     <ChevronLeft className="h-6 w-6" />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-border/50 flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110 z-10"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm border border-border/50 flex items-center justify-center text-foreground opacity-0 group-hover:opacity-100 transition-all hover:bg-white dark:hover:bg-black/70 hover:scale-110 z-10"
                     aria-label="Next image"
                   >
                     <ChevronRight className="h-6 w-6" />
@@ -371,12 +369,12 @@ const ProductDetail = () => {
                 {originalPrice && (
                   <span className="bg-primary/10 text-primary text-[10px] sm:text-xs px-3 py-1.5 rounded-full font-bold uppercase tracking-wider">{discount}% OFF</span>
                 )}
-                <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100 flex-shrink-0">
+                <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-900/30 px-3 py-1.5 rounded-xl border border-amber-100 dark:border-amber-800 flex-shrink-0">
                   <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  <span className="text-sm font-black text-amber-700">
+                  <span className="text-sm font-black text-amber-700 dark:text-amber-300">
                     {product.avg_rating ? Number(product.avg_rating).toFixed(1) : "5.0"}
                   </span>
-                  <span className="text-xs text-amber-500/70 font-bold">({product.review_count || 0})</span>
+                  <span className="text-xs text-amber-500/70 dark:text-amber-400/70 font-bold">({product.review_count || 0})</span>
                 </div>
               </div>
               <div className="inline-block">

@@ -85,11 +85,6 @@ const BestSellers = () => {
                       height={600}
                     />
                     <div className="absolute top-2 left-2 sm:top-4 sm:left-4 flex flex-col gap-1.5">
-                      {product.stock === "Low Stock" && (
-                        <span className="bg-amber-500/90 backdrop-blur-sm text-white text-[8px] sm:text-[9px] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full font-bold uppercase tracking-widest shadow-sm border border-white/20">
-                          Low Stock
-                        </span>
-                      )}
                       {product.original_price && product.original_price > product.price && (
                         <span className="bg-primary/90 backdrop-blur-sm text-primary-foreground text-[8px] sm:text-[9px] px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full font-bold uppercase tracking-widest shadow-md border border-white/20">
                           {Math.round(((product.original_price - product.price) / product.original_price) * 100)}% OFF
@@ -104,7 +99,7 @@ const BestSellers = () => {
                         e.stopPropagation();
                         toggleWishlist(product as any);
                       }}
-                      className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all shadow-sm z-10"
+                      className="absolute top-2 right-2 sm:top-4 sm:right-4 w-8 h-8 sm:w-10 sm:h-10 bg-white/80 dark:bg-black/50 backdrop-blur-md rounded-full flex items-center justify-center text-foreground hover:bg-primary hover:text-white transition-all shadow-sm z-10"
                     >
                       <Heart className={`w-4 h-4 sm:w-5 sm:h-5 ${isInWishlist(product.id) ? "fill-primary text-primary" : ""}`} />
                     </button>
@@ -122,9 +117,9 @@ const BestSellers = () => {
                           <span className="text-xs text-muted-foreground line-through opacity-60">₹{product.original_price.toLocaleString("en-IN")}</span>
                         )}
                       </div>
-                      <div className="flex items-center gap-1.5 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-100/50">
+                      <div className="flex items-center gap-1.5 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-lg border border-amber-100/50 dark:border-amber-800/50">
                         <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                        <span className="text-[11px] font-black text-amber-700">
+                        <span className="text-[11px] font-black text-amber-700 dark:text-amber-300">
                           {product.avg_rating ? Number(product.avg_rating).toFixed(1) : "5.0"}
                         </span>
                       </div>
