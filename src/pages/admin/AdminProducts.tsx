@@ -34,6 +34,14 @@ import { supabaseAdmin } from "@/lib/supabaseAdminClient";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { CloudinaryImage } from "@/components/ui/CloudinaryImage";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface Product {
     id: string;
@@ -54,11 +62,14 @@ const AdminProducts = () => {
     const [loading, setLoading] = useState(true);
     const [deleteId, setDeleteId] = useState<string | null>(null);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalCount, setTotalCount] = useState(0);
 
-    // Debounce search term
+    // Debounce search term and reset page
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchTerm);
+            setCurrentPage(0); // Reset to first page on search
         }, 400);
         return () => clearTimeout(timer);
     }, [searchTerm]);
@@ -97,28 +108,32 @@ const AdminProducts = () => {
                 cleanup();
             }
         };
-    }, [debouncedSearch]);
+    }, [debouncedSearch, currentPage]);
 
     const fetchProducts = async () => {
         setLoading(true);
         try {
+            const from = currentPage * PRODUCTS_PER_PAGE;
+            const to = from + PRODUCTS_PER_PAGE - 1;
+
             let query = supabaseAdmin
                 .from('products')
-                .select('*')
+                .select('*', { count: 'exact' })
                 .order('created_at', { ascending: false })
-                .limit(PRODUCTS_PER_PAGE);
+                .range(from, to);
 
             if (debouncedSearch) {
                 query = query.or(`name.ilike.%${debouncedSearch}%,category.ilike.%${debouncedSearch}%`);
             }
 
-            const { data, error } = await query;
+            const { data, error, count } = await query;
 
             if (error) {
                 toast.error("Failed to fetch products");
                 console.error(error);
             } else {
                 setProducts(data || []);
+                setTotalCount(count || 0);
             }
         } finally {
             setLoading(false);
@@ -194,7 +209,7 @@ const AdminProducts = () => {
                     />
                 </div>
                 <div className="hidden sm:block text-sm text-gray-400 font-medium px-4">
-                    Total: <span className="text-gray-900 font-bold">{products.length}</span> Products
+                    Total: <span className="text-gray-900 font-bold">{totalCount}</span> Products
                 </div>
             </div>
 
@@ -334,6 +349,44 @@ const AdminProducts = () => {
                     <div className="w-2 h-2 rounded-full bg-rose-500" /> Critical / Out
                 </div>
             </div>
+
+            {/* Pagination Controls */}
+            {totalCount > PRODUCTS_PER_PAGE && (
+                <div className="mt-8 flex justify-center">
+                    <Pagination>
+                        <PaginationContent className="bg-white rounded-2xl shadow-lg border border-gray-100 p-1">
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        if (currentPage > 0) setCurrentPage(prev => prev - 1);
+                                    }}
+                                    className={`${currentPage === 0 ? "pointer-events-none opacity-50" : "hover:bg-amber-50 hover:text-amber-600 transition-colors"} rounded-xl`}
+                                />
+                            </PaginationItem>
+
+                            <PaginationItem className="px-4">
+                                <span className="text-sm font-bold text-gray-900">
+                                    Page {currentPage + 1} of {Math.ceil(totalCount / PRODUCTS_PER_PAGE)}
+                                </span>
+                            </PaginationItem>
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    href="#"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        const maxPage = Math.ceil(totalCount / PRODUCTS_PER_PAGE) - 1;
+                                        if (currentPage < maxPage) setCurrentPage(prev => prev + 1);
+                                    }}
+                                    className={`${currentPage >= Math.ceil(totalCount / PRODUCTS_PER_PAGE) - 1 ? "pointer-events-none opacity-50" : "hover:bg-amber-50 hover:text-amber-600 transition-colors"} rounded-xl`}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
 
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <AlertDialogContent className="rounded-[2rem] border-none">
