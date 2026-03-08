@@ -81,7 +81,7 @@ const CollectionsSection = () => {
   const showCarousel = categories.length > 3;
 
   return (
-    <section className="py-16 lg:py-24 bg-background overflow-hidden">
+    <section className="py-16 lg:py-24 bg-[#2D1B10] overflow-hidden">
       <div className="container mx-auto px-4 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -90,7 +90,7 @@ const CollectionsSection = () => {
           className="text-center mb-10 lg:mb-16"
         >
           <p className="text-primary text-[10px] sm:text-xs tracking-[0.3em] uppercase mb-2 font-body font-semibold">Curated For You</p>
-          <h2 className="font-heading text-3xl lg:text-5xl font-bold text-foreground">Our Collections</h2>
+          <h2 className="font-heading text-3xl lg:text-5xl font-bold text-white">Our Collections</h2>
         </motion.div>
 
         {showCarousel ? (
@@ -126,7 +126,7 @@ const CollectionsSection = () => {
                       <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors duration-500" />
                     </Link>
                     <div className="mt-3 sm:mt-4 text-center">
-                      <h3 className="font-heading text-xs sm:text-base lg:text-lg font-bold text-foreground group-hover:text-primary transition-colors tracking-wide truncate w-full px-1">{col.name}</h3>
+                      <h3 className="font-heading text-xs sm:text-base lg:text-lg font-bold text-white group-hover:text-primary transition-colors tracking-wide truncate w-full px-1">{col.name}</h3>
                       <p className="text-[8px] sm:text-[10px] text-muted-foreground uppercase tracking-[0.2em] mt-1 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Explore</p>
                     </div>
                   </motion.div>
@@ -192,7 +192,7 @@ const CollectionsSection = () => {
                   <div className="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors duration-500" />
                 </Link>
                 <div className="mt-4 text-center">
-                  <h3 className="font-heading text-sm sm:text-base lg:text-lg font-bold text-foreground group-hover:text-primary transition-colors tracking-wide">{col.name}</h3>
+                  <h3 className="font-heading text-sm sm:text-base lg:text-lg font-bold text-white group-hover:text-primary transition-colors tracking-wide">{col.name}</h3>
                   <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-[0.2em] mt-1 font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300">Explore</p>
                 </div>
               </motion.div>
